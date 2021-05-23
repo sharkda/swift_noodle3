@@ -8,17 +8,31 @@
 import SwiftUI
 import FBSDKLoginKit
 import FacebookShare
+import OSLog
+
+fileprivate let logger = Logger(subsystem: myBundleId, category: "mainView")
 
 struct ContentView: View {
     var body: some View {
         VStack{
             FbLoginView()
             Divider()
+            Button(action:{
+                    //audio2Video(aName: "bluebird15", aExt: "wav", vName: "bluebird15")
+                    a2V2(aName: "bluebird15", aExt: "wav")
+            }, label: {
+                Text("A2V")
+            })
+            Divider()
             FbUglyShareUIController()
-                .frame(width: 51, height: 51, alignment: .center)
+                .frame(width: fbButtonWidth * 3, height: fbButtonHeight * 3, alignment: .center)
+            
         }
         .background(Color.yellow )
         .padding()
+        .onAppear {
+            logger.debug("onAppear")
+        }
     }
 }
 

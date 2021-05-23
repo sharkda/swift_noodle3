@@ -1,0 +1,4 @@
+Pods/
+*.xcworkspace
+*.xcworkspace/xcuserdata
+UserInterfaceState.xcuserstate

@@ -1,40 +1,61 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/**
+ to share an audio turns out tricky
+ 
+ */
 
 import FacebookShare
 import UIKit
+import OSLog
+
+fileprivate let LTag = "facebookShareViewController"
+
+let fbButtonWidth:CGFloat = 36
+let fbButtonHeight:CGFloat = 36
 
 class FacebookShareViewController: UIViewController {
     
     override func loadView() {
         view = UIView()
-        view.backgroundColor = UIColor(white: 1, alpha: 0.5)
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(white: 1, alpha: 0.3)
+        let urlBtn = UIButton(type: .system)
+        urlBtn.translatesAutoresizingMaskIntoConstraints = false
         //button.setTitle("Share", for: .normal)
-        button.setImage(UIImage(named: "fb128"), for: .normal)
-        button.center = view.center
+        urlBtn.setImage(UIImage(named: "fb128"), for: .normal)
+        //urlBtn.center = view.center
+        urlBtn.backgroundColor = .clear
         
-        button.backgroundColor = .clear
-        NSLayoutConstraint.activate([button.widthAnchor.constraint(equalToConstant:50),  button.heightAnchor.constraint(equalToConstant: 50)])
+        let videoBtn = UIButton(type: .system)
+        videoBtn.translatesAutoresizingMaskIntoConstraints = false
+        videoBtn.setTitle("video", for: .normal)
+        videoBtn.backgroundColor = UIColor.yellow
+        #if targetEnvironment(simulator)
+        videoBtn.addTarget(self,action: #selector(psuodoVideo), for: .touchUpInside)
+        #else
+        videoBtn.addTarget(self, action: "shareV2Fb", for: .touchUpInside)
+        #endif
         
-        button.addTarget(self, action: "shareLink", for: .touchUpInside)
-        view.addSubview(button)
+        #if targetEnvironment(simulator)
+        urlBtn.addTarget(self,action: #selector(psuodoShareLink), for: .touchUpInside)
+        #else
+        urlBtn.addTarget(self, action: "shareLink", for: .touchUpInside)
+        #endif
+       
+        view.addSubview(urlBtn)
+        view.addSubview(videoBtn)
+        NSLayoutConstraint.activate([
+            urlBtn.widthAnchor.constraint(equalToConstant:fbButtonWidth),
+            urlBtn.heightAnchor.constraint(equalToConstant: fbButtonHeight),
+            urlBtn.leadingAnchor.constraint(greaterThanOrEqualTo: self.view.leadingAnchor, constant: 0),
+            videoBtn.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0)
+        ])
+    }
+    
+    @objc func psuodoVideo(){
+        print("\(LTag) --  video?")
+    }
+    
+    @objc func psuodoShareLink(){
+        print("\(LTag) -- psudoSharlink ")
     }
 
     @IBAction func shareLink() {
@@ -48,7 +69,63 @@ class FacebookShareViewController: UIViewController {
 
         dialog(withContent: content).show()
     }
+    
+    //turns out this will add video into the photolib first... wth
+    func createAssetURL(url: URL, completion: @escaping (String) -> Void) {
+               let photoLibrary = PHPhotoLibrary.shared()
+               var videoAssetPlaceholder:PHObjectPlaceholder!
+               photoLibrary.performChanges({
+                   let request = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+                   videoAssetPlaceholder = request!.placeholderForCreatedAsset
+               },
+                   completionHandler: { success, error in
+                       if success {
+                           let localID = NSString(string: videoAssetPlaceholder.localIdentifier)
+                           let assetID = localID.replacingOccurrences(of: "/.*", with: "", options: NSString.CompareOptions.regularExpression, range: NSRange())
+                           let ext = "mp4"
+                           let assetURLStr =
+                           "assets-library://asset/asset.\(ext)?id=\(assetID)&ext=\(ext)"
 
+                           completion(assetURLStr)
+                       }
+               })
+           }
+    
+    @objc func shareV2Fb(){
+        let content: ShareVideoContent = ShareVideoContent()
+        let videoURLs = Bundle.main.url(forResource: "v0", withExtension: "mov")!
+        createAssetURL(url: videoURLs) { url in
+            let video = ShareVideo()
+            video.videoURL = URL(string: url)
+            content.video = video
+            
+            let shareDialog = ShareDialog()
+            shareDialog.shareContent = content
+            shareDialog.mode = .native
+            shareDialog.delegate = self
+            shareDialog.show()
+        }
+    }
+
+    
+    @objc func zz_myShareVideo(){
+//        let dataAsset = NSDataAsset(name: "v0")
+//        if dataAsset == nil {presentAlert(title: "data", message: "NSDataAsset is nil")}
+        let videoUrl = Bundle.main.url(forResource: "v0", withExtension: "mov")!
+        //let video = ShareVideo(data: dataAsset!.data)
+        let video = ShareVideo()
+        video.videoURL = videoUrl
+        let content = ShareVideoContent()
+        content.video = video
+        let dialog = self.dialog(withContent: content)
+        do{
+            try dialog.validate()
+        }catch{
+            print(error.localizedDescription)
+            presentAlert(for: error)
+        }
+    }
+    
     @IBAction func sharePhoto() {
         #if targetEnvironment(simulator)
         presentAlert(

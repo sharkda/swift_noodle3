@@ -7,11 +7,16 @@
 
 import SwiftUI
 import FBSDKCoreKit
+import OSLog
+
+let myBundleId = "com.sharkda.noodle3"
+fileprivate let logger = Logger(subsystem: myBundleId, category: "app")
 
 @main
 struct noodle3App: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -33,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-          
+        logger.debug("appDelegate::didFinishLaunchingWithOptions")
         ApplicationDelegate.shared.application(
             application,
             didFinishLaunchingWithOptions: launchOptions
@@ -46,9 +51,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ app: UIApplication,
         open url: URL,
         options: [UIApplication.OpenURLOptionsKey : Any] = [:]
-    ) -> Bool {
-
-        ApplicationDelegate.shared.application(
+    ) -> Bool { 
+        logger.debug("AppDelegate::openUrl")
+        return ApplicationDelegate.shared.application(
             app,
             open: url,
             sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,

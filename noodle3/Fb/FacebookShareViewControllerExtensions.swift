@@ -19,13 +19,15 @@
 import FacebookShare
 import UIKit
 
+fileprivate let Fp_App_Id = "475470373686985"
+
 extension FacebookShareViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         guard let appID = Bundle.main.object(forInfoDictionaryKey: "FacebookAppID") as? String,
-            appID != "{your-app-id}"
+            appID == Fp_App_Id
             else {
                 return presentAlert(
                     title: "Invalid App Identifier",
@@ -35,7 +37,7 @@ extension FacebookShareViewController {
 
         guard let urlTypes = Bundle.main.object(forInfoDictionaryKey: "CFBundleURLTypes") as? [[String: [String]]],
             let scheme = urlTypes.first?["CFBundleURLSchemes"]?.first,
-            scheme != "fb{your-app-id}"
+            scheme == "fb\(Fp_App_Id)"
             else {
                 return presentAlert(
                     title: "Invalid URL Scheme",

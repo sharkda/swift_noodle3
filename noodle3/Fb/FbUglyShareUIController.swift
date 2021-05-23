@@ -8,10 +8,20 @@
 import SwiftUI
 import FacebookShare
 
+struct FbUglyShareUIController: UIViewControllerRepresentable {
+    
+    func makeUIViewController(context: UIViewControllerRepresentableContext<FbUglyShareUIController>) -> FacebookShareViewController {
+        FacebookShareViewController()
+    }
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+    }
+}
+
+
 //struct FbShareController:UIViewControllerRepresentable{
-//    
+//
 //    @Binding var sharingContent:ShareLinkContent
-//    
+//
 //    class Coordinator: NSObject, SharingDelegate{
 //        func sharer(_ sharer: Sharing, didCompleteWithResults results: [String : Any]) {
 //            print(results)
@@ -29,7 +39,7 @@ import FacebookShare
 //    func makeCoordinator() -> Coordinator {
 //        Coordinator()
 //    }
-//    
+//
 //    func makeUIViewController(context: UIViewControllerRepresentableContext<FbShareController>) ->  ShareDialog {
 //        let fbShareDialog = ShareDialog()
 //        fbShareDialog.delegate = context.coordinator
@@ -38,12 +48,3 @@ import FacebookShare
 //    func updateUIViewController(_ uiViewController: FbShareController, context: UIViewControllerRepresentableContext<FbShareController>) {
 //    }
 //}
-
-struct FbUglyShareUIController: UIViewControllerRepresentable {
-    
-    func makeUIViewController(context: UIViewControllerRepresentableContext<FbUglyShareUIController>) -> FacebookShareViewController {
-        FacebookShareViewController()
-    }
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-    }
-}
