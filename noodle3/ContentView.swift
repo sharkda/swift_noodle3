@@ -13,6 +13,12 @@ import OSLog
 fileprivate let logger = Logger(subsystem: myBundleId, category: "mainView")
 
 struct ContentView: View {
+    
+    @State var showingProgressView:Bool = false
+    @State var isFbSharing:Bool = false
+    
+    @Environment(\.presentationMode) var presentationMode //though we are not going to dismiss contentview...
+    
     var body: some View {
         VStack{
             FbLoginView()
@@ -24,7 +30,10 @@ struct ContentView: View {
                 Text("A2V")
             })
             Divider()
-            FbUglyShareUIController()
+            if isFbSharing{
+                ProgressView()
+            }
+            FbUglyShareUIController(isSharing: $isFbSharing)
                 .frame(width: fbButtonWidth * 3, height: fbButtonHeight * 3, alignment: .center)
             
         }
@@ -32,6 +41,9 @@ struct ContentView: View {
         .padding()
         .onAppear {
             logger.debug("onAppear")
+        }
+        .onDisappear(){
+            logger.debug("onDisappear")
         }
     }
 }

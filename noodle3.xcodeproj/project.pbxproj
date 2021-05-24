@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		5781FAA5BEDE1BE00E53D85A /* Pods_noodle3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FC09FD461B432F95CB45E16 /* Pods_noodle3.framework */; };
-		B287A8212658E2A50044B85B /* v0.mov in Resources */ = {isa = PBXBuildFile; fileRef = B287A8202658E2A50044B85B /* v0.mov */; };
 		B287A8232658FCCC0044B85B /* a0.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B287A8222658FCCC0044B85B /* a0.m4a */; };
 		B287A825265904BA0044B85B /* AvHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B287A824265904BA0044B85B /* AvHelper.swift */; };
 		B287A827265938700044B85B /* bluebird15.wav in Resources */ = {isa = PBXBuildFile; fileRef = B287A826265938700044B85B /* bluebird15.wav */; };
+		B287A82D265A9E670044B85B /* bluebird15.m4v in Resources */ = {isa = PBXBuildFile; fileRef = B287A82C265A9E600044B85B /* bluebird15.m4v */; };
 		B2F349D726554E9F005D11B5 /* noodle3App.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F349D626554E9F005D11B5 /* noodle3App.swift */; };
 		B2F349D926554E9F005D11B5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F349D826554E9F005D11B5 /* ContentView.swift */; };
 		B2F349DB26554E9F005D11B5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2F349DA26554E9F005D11B5 /* Assets.xcassets */; };
@@ -27,10 +27,10 @@
 /* Begin PBXFileReference section */
 		3FC09FD461B432F95CB45E16 /* Pods_noodle3.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_noodle3.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DFA5183A6DD581D26D09659 /* Pods-noodle3.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-noodle3.release.xcconfig"; path = "Target Support Files/Pods-noodle3/Pods-noodle3.release.xcconfig"; sourceTree = "<group>"; };
-		B287A8202658E2A50044B85B /* v0.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = v0.mov; sourceTree = "<group>"; };
 		B287A8222658FCCC0044B85B /* a0.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = a0.m4a; sourceTree = "<group>"; };
 		B287A824265904BA0044B85B /* AvHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvHelper.swift; sourceTree = "<group>"; };
 		B287A826265938700044B85B /* bluebird15.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = bluebird15.wav; sourceTree = "<group>"; };
+		B287A82C265A9E600044B85B /* bluebird15.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = bluebird15.m4v; sourceTree = "<group>"; };
 		B2F349D326554E9F005D11B5 /* noodle3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = noodle3.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2F349D626554E9F005D11B5 /* noodle3App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = noodle3App.swift; sourceTree = "<group>"; };
 		B2F349D826554E9F005D11B5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -71,8 +71,8 @@
 			isa = PBXGroup;
 			children = (
 				B287A826265938700044B85B /* bluebird15.wav */,
+				B287A82C265A9E600044B85B /* bluebird15.m4v */,
 				B287A8222658FCCC0044B85B /* a0.m4a */,
-				B287A8202658E2A50044B85B /* v0.mov */,
 			);
 			path = resources;
 			sourceTree = "<group>";
@@ -203,8 +203,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B287A8212658E2A50044B85B /* v0.mov in Resources */,
 				B2F349DE26554E9F005D11B5 /* Preview Assets.xcassets in Resources */,
+				B287A82D265A9E670044B85B /* bluebird15.m4v in Resources */,
 				B2F349DB26554E9F005D11B5 /* Assets.xcassets in Resources */,
 				B287A8232658FCCC0044B85B /* a0.m4a in Resources */,
 				B287A827265938700044B85B /* bluebird15.wav in Resources */,

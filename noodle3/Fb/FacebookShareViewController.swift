@@ -9,10 +9,21 @@ import OSLog
 
 fileprivate let LTag = "facebookShareViewController"
 
+let loggerFb = Logger(subsystem: myBundleId, category: "fbShare")
+
 let fbButtonWidth:CGFloat = 36
 let fbButtonHeight:CGFloat = 36
 
+protocol MyFacebookUIDelegate{
+    func onShareButtonClicked()
+    func onCompleted()
+}
+
 class FacebookShareViewController: UIViewController {
+    
+    fileprivate var toShareVideoNext:Bool = false
+    
+    var delegate:MyFacebookUIDelegate!
     
     override func loadView() {
         view = UIView()
@@ -31,7 +42,7 @@ class FacebookShareViewController: UIViewController {
         #if targetEnvironment(simulator)
         videoBtn.addTarget(self,action: #selector(psuodoVideo), for: .touchUpInside)
         #else
-        videoBtn.addTarget(self, action: "shareV2Fb", for: .touchUpInside)
+        videoBtn.addTarget(self, action: #selector(fBShareLinkAndVideo), for: .touchUpInside)
         #endif
         
         #if targetEnvironment(simulator)
@@ -51,14 +62,22 @@ class FacebookShareViewController: UIViewController {
     }
     
     @objc func psuodoVideo(){
+        delegate.onShareButtonClicked()
         print("\(LTag) --  video?")
     }
     
     @objc func psuodoShareLink(){
+        delegate.onShareButtonClicked()
         print("\(LTag) -- psudoSharlink ")
     }
 
-    @IBAction func shareLink() {
+    @objc func fBShareLinkAndVideo(){
+        delegate.onShareButtonClicked()
+        self.toShareVideoNext = true
+        shareLink()
+    }
+    
+    fileprivate func shareLink() {
         guard let url = URL(string: "https://newsroom.fb.com/") else {
             preconditionFailure("URL is invalid")
         }
@@ -91,19 +110,33 @@ class FacebookShareViewController: UIViewController {
                })
            }
     
-    @objc func shareV2Fb(){
+
+    
+    fileprivate func shareV2Fb(){
+        delegate.onShareButtonClicked()
         let content: ShareVideoContent = ShareVideoContent()
-        let videoURLs = Bundle.main.url(forResource: "v0", withExtension: "mov")!
+        //let content: ShareMediaContent = ShareMediaContent()
+        let videoURLs = Bundle.main.url(forResource: "bluebird15", withExtension: "m4v")!
         createAssetURL(url: videoURLs) { url in
             let video = ShareVideo()
             video.videoURL = URL(string: url)
-            content.video = video
             
-            let shareDialog = ShareDialog()
-            shareDialog.shareContent = content
-            shareDialog.mode = .native
-            shareDialog.delegate = self
-            shareDialog.show()
+            guard let url = URL(string: "https://newsroom.fb.com/") else {
+                preconditionFailure("URL is invalid")
+            }
+            content.contentURL = url
+            content.video = video
+            content.hashtag = Hashtag("#hashTagfirstTime")
+            content.hashtag = Hashtag("#hashTagSecondTime")
+            DispatchQueue.main.async {
+                let shareDialog = ShareDialog()
+                shareDialog.shareContent = content
+                shareDialog.mode = .native
+                shareDialog.delegate = self
+                shareDialog.fromViewController = self
+                shareDialog.show()
+            }
+            
         }
     }
 
@@ -173,14 +206,26 @@ extension FacebookShareViewController: SharingDelegate {
 
     func sharer(_ sharer: Sharing, didCompleteWithResults results: [String : Any]) {
         print(results)
+        loggerFb.debug("didCompleteWithResults \(results)")
+        if self.toShareVideoNext{
+            self.shareV2Fb()
+            self.toShareVideoNext.toggle()
+        }
     }
 
     func sharer(_ sharer: Sharing, didFailWithError error: Error) {
         presentAlert(for: error)
+        loggerFb.notice("didFailWith Error \(error.localizedDescription)")
+        self.toShareVideoNext.toggle()
     }
 
     func sharerDidCancel(_ sharer: Sharing) {
         presentAlert(title: "Cancelled", message: "Sharing cancelled")
+        loggerFb.debug("Cancelled ")
+        if self.toShareVideoNext{
+            self.shareV2Fb()
+            self.toShareVideoNext.toggle()
+        }
     }
 
 
